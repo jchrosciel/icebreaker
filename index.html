@@ -40,6 +40,7 @@
 }
 *, *::before, *::after { box-sizing: inherit; }
 [hidden] { display: none !important; }
+.greeting, .question, .chip span, .order button, .btn, .qtext, .step-note, .msg { overflow-wrap: anywhere; }
 html { scroll-padding-top: env(safe-area-inset-top, 0px); }
 body {
   margin: 0;
@@ -477,10 +478,10 @@ body.presenting .setup { display: none; }
               <button type="button" data-mode="one" aria-pressed="true">One person</button>
               <button type="button" data-mode="all" aria-pressed="false">Everyone</button>
             </div>
-            <button type="button" class="present-btn" id="btnPresent" aria-pressed="false"></button>
+            <button type="button" class="present-btn" id="btnPresent" aria-pressed="false">Present</button>
           </div>
         </div>
-        <h2 class="greeting" id="greeting"></h2>
+        <h2 class="greeting" id="greeting">Hello,</h2>
         <p class="question" id="question" aria-live="polite"></p>
         <div class="order" id="order" hidden>
           <p class="order-label">Answer order</p>
@@ -538,7 +539,7 @@ body.presenting .setup { display: none; }
 
         <div class="bulk" id="qBulk" hidden>
           <label class="field-label" for="bulkText">One question per line. Start a line with # to name a category. Delete a line to remove a question.</label>
-          <textarea id="bulkText" spellcheck="true" wrap="off"></textarea>
+          <textarea id="bulkText" spellcheck="true"></textarea>
           <p class="msg" id="bulkMsg" role="status"></p>
           <div class="row">
             <button type="button" class="btn btn-solid" id="bulkSave">Save changes</button>
