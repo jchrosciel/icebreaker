@@ -1,0 +1,1548 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta http-equiv="Content-Security-Policy" content="default-src 'none'; connect-src 'self'; script-src 'unsafe-inline'; style-src 'unsafe-inline'; img-src data:; base-uri 'none'; form-action 'none'">
+<meta name="referrer" content="no-referrer">
+<meta name="robots" content="noindex, nofollow">
+<title>Icebreaker</title>
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Ctext y='.9em' font-size='90'%3E%F0%9F%A7%8A%3C/text%3E%3C/svg%3E">
+<style>
+:root {
+  --bg: #ECEFF4;
+  --surface: #FFFFFF;
+  --ink: #1A1E27;
+  --muted: #596173;
+  --line: #D3D9E3;
+  --chip: #E2E7F0;
+  --accent: #2E3A8C;
+  --accent-ink: #FFFFFF;
+  --focus: #2E3A8C;
+  --font-ui: Bahnschrift, "DIN Alternate", "DIN Next", "Avenir Next", "Segoe UI", system-ui, sans-serif;
+  --font-q: "Iowan Old Style", "Sitka Heading", "Palatino Linotype", Palatino, "Book Antiqua", Georgia, serif;
+  color-scheme: light;
+  box-sizing: border-box;
+  padding-top: env(safe-area-inset-top, 0px);
+  padding-bottom: env(safe-area-inset-bottom, 0px);
+}
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    --bg: #15171C; --surface: #1E2129; --ink: #E8EBF1; --muted: #9BA3B3; --line: #333A47;
+    --chip: #2A2F3A; --accent: #A9C1FF; --accent-ink: #111A3A; --focus: #A9C1FF;
+    color-scheme: dark;
+  }
+}
+:root[data-theme="dark"] {
+  --bg: #15171C; --surface: #1E2129; --ink: #E8EBF1; --muted: #9BA3B3; --line: #333A47;
+  --chip: #2A2F3A; --accent: #A9C1FF; --accent-ink: #111A3A; --focus: #A9C1FF;
+  color-scheme: dark;
+}
+*, *::before, *::after { box-sizing: inherit; }
+[hidden] { display: none !important; }
+html { scroll-padding-top: env(safe-area-inset-top, 0px); }
+body {
+  margin: 0;
+  background: var(--bg);
+  color: var(--ink);
+  font-family: var(--font-ui);
+  font-size: 1rem;
+  line-height: 1.5;
+}
+:focus-visible { outline: 3px solid var(--focus); outline-offset: 2px; }
+
+.wrap { max-width: 1080px; margin: 0 auto; padding: clamp(1rem, 3vw, 2rem) clamp(1rem, 3vw, 2rem) 2.5rem; }
+.top { margin-bottom: 1.25rem; }
+.top h1 { font-size: 1.5rem; font-weight: 700; margin: 0; letter-spacing: .01em; }
+
+/* The deck: the one loud thing on the page */
+.deck { position: relative; isolation: isolate; padding: 0 8px 12px; margin-bottom: .75rem; }
+.deck .back { position: absolute; inset: 0 8px 12px; border-radius: 22px; z-index: -1; transition: background-color .3s ease; }
+.deck .back-1 { background: var(--back1, #A9C1FF); transform: rotate(1.3deg) translate(7px, 7px); }
+.deck .back-2 { background: var(--back2, #86DDBB); transform: rotate(-1.5deg) translate(-5px, 10px); }
+.card {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  min-height: clamp(320px, 44vh, 460px);
+  padding: clamp(1.5rem, 4.5vw, 3.25rem);
+  border-radius: 22px;
+  background: var(--card, #F6C945);
+  color: var(--card-ink, #2B2206);
+  transition: background-color .3s ease, color .3s ease;
+}
+.card :focus-visible { outline-color: var(--card-ink); }
+.card-top { display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: .75rem 1rem; margin: 0 0 auto; }
+.cat-label {
+  margin: 0;
+  display: inline-flex;
+  align-items: center;
+  gap: .55rem;
+  font-size: 1rem;
+  font-weight: 600;
+}
+.cat-label::before { content: ""; width: .65rem; height: .65rem; border-radius: 50%; background: currentColor; }
+.card-tools { display: flex; flex-wrap: wrap; align-items: center; justify-content: flex-end; gap: .5rem; }
+.mode {
+  display: inline-flex;
+  padding: 2px;
+  border: 1.5px solid currentColor;
+  border-radius: 999px;
+}
+.mode button {
+  padding: .3rem .85rem;
+  border: 0;
+  border-radius: 999px;
+  background: transparent;
+  color: var(--card-ink);
+  font: inherit;
+  font-size: .9rem;
+  font-weight: 600;
+  white-space: nowrap;
+  cursor: pointer;
+}
+.mode button[aria-pressed="false"]:hover { background: color-mix(in srgb, var(--card-ink) 12%, transparent); }
+.mode button[aria-pressed="true"] { background: var(--card-ink); color: var(--card); cursor: default; }
+.present-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: .4rem;
+  padding: .45rem .85rem;
+  border: 1.5px solid currentColor;
+  border-radius: 999px;
+  background: transparent;
+  color: var(--card-ink);
+  font: inherit;
+  font-size: .9rem;
+  font-weight: 600;
+  cursor: pointer;
+  opacity: .8;
+}
+.present-btn:hover { opacity: 1; background: color-mix(in srgb, var(--card-ink) 10%, transparent); }
+.present-btn svg { width: 14px; height: 14px; }
+.greeting {
+  margin: 2rem 0 .6rem;
+  font-family: var(--font-ui);
+  font-size: clamp(1.4rem, 2.8vw, 2.1rem);
+  font-weight: 700;
+  line-height: 1.2;
+}
+.question {
+  margin: 0 0 2rem;
+  max-width: 26ch;
+  font-family: var(--font-q);
+  font-size: clamp(1.9rem, 4.6vw, 3.8rem);
+  font-weight: 400;
+  line-height: 1.14;
+  text-wrap: balance;
+}
+.order { margin: -.75rem 0 2rem; }
+.order-label { margin: 0 0 .5rem; font-size: .95rem; font-weight: 600; }
+.order ol { display: flex; flex-wrap: wrap; gap: .45rem; margin: 0; padding: 0; list-style: none; }
+.order button {
+  display: inline-flex;
+  align-items: center;
+  gap: .4rem;
+  padding: .3rem .85rem;
+  border: 2px solid currentColor;
+  border-radius: 999px;
+  background: transparent;
+  color: var(--card-ink);
+  font: inherit;
+  font-weight: 600;
+  cursor: pointer;
+}
+.order button .n { font-weight: 500; opacity: .7; }
+.order button:hover { background: color-mix(in srgb, var(--card-ink) 10%, transparent); }
+.order button[aria-pressed="true"] {
+  opacity: .5;
+  text-decoration: line-through;
+  background: color-mix(in srgb, var(--card-ink) 12%, transparent);
+}
+.actions { display: flex; flex-wrap: wrap; gap: .6rem; margin-top: auto; }
+
+@keyframes deal {
+  from { opacity: 0; transform: translateY(12px) rotate(-.5deg); }
+  to { opacity: 1; transform: none; }
+}
+.card.deal .greeting { animation: deal .34s cubic-bezier(.2, .7, .2, 1) both; }
+.card.deal .question { animation: deal .38s .06s cubic-bezier(.2, .7, .2, 1) both; }
+.card.deal .order { animation: deal .38s .12s cubic-bezier(.2, .7, .2, 1) both; }
+
+/* Presentation mode: only the card, filling the screen */
+body.presenting { overflow: hidden; }
+body.presenting .wrap {
+  display: flex;
+  flex-direction: column;
+  max-width: none;
+  height: 100vh;
+  height: 100dvh;
+  padding: clamp(.75rem, 2.5vh, 2rem) clamp(.75rem, 2.5vw, 2rem);
+}
+body.presenting .top,
+body.presenting .status,
+body.presenting .panels,
+body.presenting .foot { display: none; }
+body.presenting main { display: flex; flex: 1; min-height: 0; }
+body.presenting .deck { display: flex; flex: 1; margin: 0; }
+body.presenting .card { flex: 1; min-height: 0; overflow: auto; }
+body.presenting .greeting { font-size: clamp(1.6rem, 3.2vw, 2.8rem); }
+body.presenting .question { font-size: clamp(2.2rem, 5.6vw, 5.4rem); max-width: 30ch; }
+
+/* Buttons */
+.btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: .5rem;
+  padding: .7rem 1.15rem;
+  border: 2px solid transparent;
+  border-radius: 10px;
+  font: inherit;
+  font-weight: 600;
+  cursor: pointer;
+  background: transparent;
+  color: inherit;
+}
+.card .btn-primary { background: var(--card-ink); color: var(--card); }
+.card .btn-ghost { border-color: currentColor; color: var(--card-ink); }
+.card .btn-primary:hover { filter: brightness(1.15); }
+.card .btn-ghost:hover { background: color-mix(in srgb, var(--card-ink) 10%, transparent); }
+.btn-solid { background: var(--accent); color: var(--accent-ink); }
+.btn-solid:hover { filter: brightness(1.12); }
+.btn-quiet { border: 1px solid var(--line); color: var(--ink); padding: .55rem .9rem; font-weight: 500; }
+.btn-quiet:hover { background: var(--chip); }
+
+.status {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-between;
+  gap: .4rem 1rem;
+  margin: 0 .5rem 2rem;
+  color: var(--muted);
+  font-size: .92rem;
+}
+kbd {
+  font: inherit;
+  font-size: .85em;
+  padding: 0 .4em;
+  border: 1px solid var(--line);
+  border-bottom-width: 2px;
+  border-radius: 5px;
+  background: var(--surface);
+  color: var(--ink);
+}
+
+/* Panels */
+.panels { display: grid; grid-template-columns: 1fr; gap: 1.25rem; align-items: start; }
+@media (min-width: 880px) { .panels { grid-template-columns: minmax(0, 1fr) minmax(0, 1.55fr); } }
+.panel { background: var(--surface); border: 1px solid var(--line); border-radius: 14px; padding: 1.25rem; }
+.panel h2 { display: flex; align-items: baseline; gap: .5rem; margin: 0 0 1rem; font-size: 1.15rem; }
+.panel-head { display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: .5rem 1rem; margin-bottom: 1rem; }
+.panel-head h2 { margin: 0; }
+.count { color: var(--muted); font-weight: 500; font-size: .95rem; }
+
+.chips { display: flex; flex-wrap: wrap; gap: .45rem; margin: 0 0 1rem; padding: 0; list-style: none; }
+.chip {
+  display: inline-flex;
+  align-items: center;
+  gap: .1rem;
+  padding: .25rem .25rem .25rem .85rem;
+  border-radius: 999px;
+  background: var(--chip);
+}
+.chip[aria-current="true"] { background: var(--accent); color: var(--accent-ink); }
+.empty { margin: 0 0 1rem; color: var(--muted); }
+
+.icon-btn {
+  display: inline-grid;
+  place-items: center;
+  flex: none;
+  width: 30px;
+  height: 30px;
+  padding: 0;
+  border: 0;
+  border-radius: 50%;
+  background: transparent;
+  color: inherit;
+  cursor: pointer;
+  opacity: .7;
+}
+.icon-btn:hover { opacity: 1; background: color-mix(in srgb, currentColor 14%, transparent); }
+.icon-btn svg { width: 14px; height: 14px; }
+
+.field-label { display: block; margin-bottom: .35rem; color: var(--muted); font-size: .9rem; }
+.row { display: flex; flex-wrap: wrap; gap: .5rem; }
+.row input { flex: 1 1 12rem; }
+input[type="text"], select, textarea {
+  min-width: 0;
+  padding: .6rem .75rem;
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  background: var(--bg);
+  color: var(--ink);
+  font: inherit;
+}
+.msg { min-height: 1.4em; margin: .35rem 0 .5rem; color: var(--muted); font-size: .88rem; }
+.help { margin: .5rem 0 0; color: var(--muted); font-size: .88rem; max-width: 62ch; }
+.help.has-changes { color: var(--ink); }
+.linkbox { padding-top: 1rem; border-top: 1px solid var(--line); }
+.check { display: flex; align-items: center; gap: .5rem; margin-top: .75rem; font-size: .95rem; cursor: pointer; }
+.check input { width: 1.1rem; height: 1.1rem; margin: 0; accent-color: var(--accent); }
+
+.bulk textarea {
+  display: block;
+  width: 100%;
+  min-height: 24rem;
+  resize: vertical;
+  overflow-x: auto;
+  white-space: pre;
+  overflow-wrap: normal;
+  font-size: .95rem;
+  line-height: 1.6;
+}
+
+.cat { border-top: 1px solid var(--line); }
+.cat summary {
+  display: flex;
+  align-items: center;
+  gap: .6rem;
+  padding: .75rem 0;
+  font-weight: 600;
+  cursor: pointer;
+  list-style: none;
+}
+.cat summary::-webkit-details-marker { display: none; }
+.cat summary::after {
+  content: "";
+  width: .5rem;
+  height: .5rem;
+  margin: 0 .4rem 0 auto;
+  border-right: 2px solid var(--muted);
+  border-bottom: 2px solid var(--muted);
+  transform: rotate(45deg) translateY(-2px);
+}
+.cat[open] summary::after { transform: rotate(-135deg); }
+.dot { flex: none; width: .8rem; height: .8rem; border-radius: 50%; box-shadow: inset 0 0 0 1px color-mix(in srgb, var(--ink) 20%, transparent); }
+.qlist { margin: 0 0 .75rem; padding: 0; list-style: none; }
+.qlist li { display: flex; align-items: flex-start; gap: .75rem; padding: .45rem 0; border-top: 1px dashed var(--line); }
+.qlist li:first-child { border-top: 0; }
+.qtext { flex: 1; }
+.is-asked .qtext { color: var(--muted); }
+.tag {
+  display: inline-block;
+  margin-left: .45rem;
+  padding: 0 .5rem;
+  border: 1px solid var(--line);
+  border-radius: 999px;
+  color: var(--muted);
+  font-size: .75rem;
+  white-space: nowrap;
+  vertical-align: .1em;
+}
+.q-actions { display: flex; flex-wrap: wrap; gap: .5rem; padding-top: 1rem; border-top: 1px solid var(--line); }
+
+.foot { margin-top: 2rem; color: var(--muted); font-size: .88rem; }
+.foot p { margin: 0; }
+
+.toast {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  position: fixed;
+  left: 50%;
+  bottom: calc(1.25rem + env(safe-area-inset-bottom, 0px));
+  z-index: 10;
+  max-width: min(92vw, 34rem);
+  padding: .7rem 1rem;
+  border-radius: 10px;
+  background: var(--ink);
+  color: var(--bg);
+  font-size: .95rem;
+  opacity: 0;
+  pointer-events: none;
+  transform: translate(-50%, 1rem);
+  transition: opacity .2s ease, transform .2s ease;
+}
+.toast.show { opacity: 1; transform: translate(-50%, 0); }
+.toast.show.has-action { pointer-events: auto; }
+.toast-action {
+  flex: none;
+  padding: .3rem .75rem;
+  border: 1px solid currentColor;
+  border-radius: 8px;
+  background: transparent;
+  color: inherit;
+  font: inherit;
+  font-weight: 600;
+  cursor: pointer;
+}
+.toast-action:focus-visible { outline-color: var(--bg); }
+
+@media (max-width: 560px) {
+  .actions .btn { flex: 1 1 100%; }
+  .status .keys { display: none; }
+  .card-tools { justify-content: flex-start; }
+}
+@media (prefers-reduced-motion: reduce) {
+  .card.deal .greeting, .card.deal .question, .card.deal .order { animation: none; }
+  .card, .deck .back, .toast { transition: none; }
+}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <header class="top">
+    <h1>Icebreaker</h1>
+  </header>
+
+  <main>
+    <section class="deck" id="deck" aria-label="Current question">
+      <div class="back back-2" aria-hidden="true"></div>
+      <div class="back back-1" aria-hidden="true"></div>
+      <article class="card" id="card">
+        <div class="card-top">
+          <p class="cat-label" id="catLabel"></p>
+          <div class="card-tools">
+            <div class="mode" id="modeSwitch" role="group" aria-label="Who answers">
+              <button type="button" data-mode="one" aria-pressed="true">One person</button>
+              <button type="button" data-mode="all" aria-pressed="false">Everyone</button>
+            </div>
+            <button type="button" class="present-btn" id="btnPresent" aria-pressed="false"></button>
+          </div>
+        </div>
+        <h2 class="greeting" id="greeting"></h2>
+        <p class="question" id="question" aria-live="polite"></p>
+        <div class="order" id="order" hidden>
+          <p class="order-label">Answer order</p>
+          <ol id="orderList"></ol>
+        </div>
+        <div class="actions">
+          <button type="button" class="btn btn-ghost" id="btnSame">New question</button>
+          <button type="button" class="btn btn-primary" id="btnNext">Next person</button>
+        </div>
+      </article>
+    </section>
+    <div class="status">
+      <span id="left"></span>
+      <span class="keys">Shortcuts: <kbd>N</kbd> next person, <kbd>Q</kbd> new question, <kbd>E</kbd> one person or everyone, <kbd>P</kbd> present</span>
+    </div>
+
+    <div class="panels">
+      <section class="panel" aria-labelledby="pTitle">
+        <h2 id="pTitle">Participants <span class="count" id="pCount"></span></h2>
+        <ul class="chips" id="chips"></ul>
+        <p class="empty" id="pEmpty">No one here yet. Add your team, then copy the link to keep the list.</p>
+        <form id="addPerson" autocomplete="off">
+          <label class="field-label" for="personName">Add a participant</label>
+          <div class="row">
+            <input type="text" id="personName" maxlength="40" placeholder="Name">
+            <button type="submit" class="btn btn-solid">Add</button>
+          </div>
+          <p class="msg" id="personMsg" role="status"></p>
+        </form>
+        <div class="linkbox">
+          <button type="button" class="btn btn-quiet" id="copyLink">Copy team link</button>
+          <label class="check"><input type="checkbox" id="linkPresent"> Link opens in presentation mode</label>
+          <p class="help">The link includes everyone on the list, so anyone who opens it sees the same team.</p>
+        </div>
+      </section>
+
+      <section class="panel" aria-labelledby="qTitle">
+        <div class="panel-head">
+          <h2 id="qTitle">Questions <span class="count" id="qCount"></span></h2>
+          <button type="button" class="btn btn-quiet" id="editText">Edit all as text</button>
+        </div>
+
+        <div id="qView">
+          <form id="addQuestion" autocomplete="off">
+            <label class="field-label" for="newQ">Add your own question</label>
+            <div class="row">
+              <input type="text" id="newQ" maxlength="200" placeholder="What’s the best…">
+              <select id="newCat" aria-label="Category"></select>
+              <button type="submit" class="btn btn-solid">Add question</button>
+            </div>
+            <p class="msg" id="qMsg" role="status"></p>
+          </form>
+          <div id="catList"></div>
+        </div>
+
+        <div class="bulk" id="qBulk" hidden>
+          <label class="field-label" for="bulkText">One question per line. Start a line with # to name a category. Delete a line to remove a question.</label>
+          <textarea id="bulkText" spellcheck="true" wrap="off"></textarea>
+          <p class="msg" id="bulkMsg" role="status"></p>
+          <div class="row">
+            <button type="button" class="btn btn-solid" id="bulkSave">Save changes</button>
+            <button type="button" class="btn btn-quiet" id="bulkCancel">Cancel</button>
+          </div>
+        </div>
+
+        <div class="q-actions" id="qActions">
+          <button type="button" class="btn btn-quiet" id="resetAsked">Mark all as unasked</button>
+          <button type="button" class="btn btn-quiet" id="undoChanges" hidden>Undo my changes</button>
+          <button type="button" class="btn btn-quiet" id="download">Download updated page</button>
+        </div>
+        <p class="help" id="changeNote"></p>
+      </section>
+    </div>
+  </main>
+
+  <footer class="foot">
+    <p>Runs entirely in your browser: no accounts, cookies, tracking, or requests to other sites.</p>
+  </footer>
+</div>
+<div class="toast" id="toast" role="status" aria-live="polite"></div>
+
+<!-- QUESTION LIST
+     One question per line. A line starting with # starts a new category.
+     Add, delete or reword lines freely, then save the file. -->
+<script type="text/plain" id="question-bank">
+# Light & fun
+What’s the most useless skill you’re weirdly good at?
+What’s your go-to karaoke song, or the one you’d pick if you were forced?
+What’s the best cheap purchase you’ve ever made?
+What’s your most questionable snack combination?
+What was the last thing you got unreasonably excited about?
+What’s a series you’ve rewatched more times than you’d like to admit?
+What’s the weirdest thing in your fridge right now?
+What’s a small thing that instantly makes your day better?
+What’s the worst haircut you’ve ever had?
+What do you cook when you really can’t be bothered to cook?
+Which emoji do you use way too much?
+What’s a hobby you picked up and abandoned within a month?
+What did you want to be when you were seven?
+What’s the strangest souvenir you’ve ever brought home?
+What’s a phrase you say at work far too often?
+Describe your ideal lazy Sunday.
+Which fictional character would you want as a coworker?
+What’s a word you always misspell or mispronounce?
+What’s your guilty-pleasure music?
+What’s the most random fact you know by heart?
+What’s something you’re unreasonably competitive about?
+What smell instantly takes you back to childhood?
+If you got one extra free hour every day, what would you do with it?
+What’s a household chore you secretly enjoy?
+What’s the most-used app on your phone that isn’t for messaging?
+What’s your comfort food after a long day?
+What’s the last thing you bought that you didn’t really need?
+What’s the best pet name you’ve ever heard?
+What would your autobiography be called?
+What’s a movie you can quote almost word for word?
+What’s your signature dish, the one people actually ask you to make?
+What’s the most ambitious flat-pack furniture you’ve assembled, and did it survive?
+
+# Would you rather
+Would you rather be able to talk to animals or speak every human language fluently?
+Would you rather have a rewind button or a pause button for your life?
+Would you rather work four 10-hour days or five 8-hour days?
+Would you rather give up coffee (or tea) or your phone for a month?
+Would you rather have unlimited free flights or free meals at any restaurant, forever?
+Would you rather never have to sleep or never have to eat?
+Would you rather live 100 years in the past or 100 years in the future?
+Would you rather turn every meeting into an email or every email into a meeting?
+Would you rather always be 10 minutes late or always be 20 minutes early?
+Would you rather have a personal chef or a personal driver?
+Would you rather live by the sea or in the mountains?
+Would you rather be able to teleport or read minds?
+Would you rather fight one horse-sized duck or a hundred duck-sized horses?
+Would you rather lose your sense of taste or your sense of smell?
+Would you rather have your camera stuck on in every meeting or be permanently on mute?
+Would you rather sit next to a very chatty stranger or a crying baby on a long flight?
+Would you rather eat only your favorite food forever or never eat it again?
+Would you rather master every musical instrument or every sport?
+Would you rather relive the same day for a year or skip a year of your life?
+Would you rather have a pet dragon or be a dragon?
+Would you rather explore the deep ocean or outer space?
+Would you rather have summer all year or winter all year?
+Would you rather take a fully paid year off now or retire five years early?
+Would you rather be the funniest person in the room or the smartest?
+Would you rather lose all your photos or all your messages?
+Would you rather have free Wi-Fi everywhere you go or free coffee everywhere you go?
+Would you rather be a famous musician or a famous chef?
+Would you rather only be able to whisper or only be able to shout?
+Would you rather be invisible for a day or able to fly for a day?
+
+# Hot takes
+What’s a popular food you think is completely overrated?
+What’s a hill you’re willing to die on?
+What’s a rule of etiquette you’d happily abolish?
+Pineapple on pizza: defend your position.
+What’s a much-loved movie or series you think is overrated?
+What’s a common piece of advice you think is actually bad?
+Is a hot dog a sandwich? Explain yourself.
+What’s the most overrated tourist attraction you’ve visited?
+What’s something everyone seems to love that you just don’t get?
+Morning person or night owl, and why is your side objectively right?
+What’s the correct way to load a dishwasher, and why is everyone else wrong?
+Cats or dogs? Make your case.
+What’s your most unpopular opinion about meetings?
+Which season is the best, and which one is clearly the worst?
+What’s a word or phrase that should be banned from office language?
+What’s an underrated city or country more people should visit?
+What’s an underrated food more people should try?
+Toilet roll: over or under? Defend it.
+What’s a skill everyone should learn but almost nobody does?
+Is it ever acceptable to recline your seat on a plane?
+Which decade had the best music, and why is it obviously that one?
+Does listening to an audiobook count as reading the book?
+What piece of technology was better in its older version?
+What’s a trend you hope never comes back?
+Is it acceptable to eat pizza with a knife and fork?
+What’s a “life hack” that doesn’t actually work?
+
+# Stories
+What’s the best trip you’ve ever taken, and what made it great?
+What’s the most memorable concert or event you’ve been to?
+What’s the strangest job or side gig you’ve ever had?
+What’s the most adventurous thing you’ve ever eaten?
+What’s a mistake from early in your career that you can laugh about now?
+What’s the best piece of advice you’ve ever received?
+Tell us about a time you got completely lost.
+What’s the best gift you’ve ever received?
+What’s a story your family still tells about you?
+What’s the most spontaneous thing you’ve ever done?
+What was your first ever job, and what did it teach you?
+What’s the best compliment you’ve ever received?
+Tell us about a plan that went hilariously wrong.
+Who’s the most interesting person you’ve met completely by chance?
+Who was the most memorable teacher you ever had, and why?
+What’s the scariest thing you’ve ever done voluntarily?
+What’s your most memorable travel disaster?
+What’s your biggest kitchen disaster?
+What was the last thing that made you laugh out loud?
+What’s the most “you” thing you’ve done this year?
+What’s something you learned recently that surprised you?
+Tell us about a time a stranger was unexpectedly kind to you.
+What’s the best thing that happened to you this week?
+What’s the most trouble you got into as a kid?
+What’s the longest you’ve ever waited for something, and was it worth it?
+
+# A bit deeper
+What’s something you’ve changed your mind about in the last few years?
+What’s a small habit that has made a big difference in your life?
+What are you looking forward to in the next few months?
+What would you do for work if money didn’t matter?
+What’s a book, podcast, or film that changed how you think about something?
+Who’s someone who shaped who you are, and how?
+What’s something you’re proud of that took a long time to achieve?
+What does a really good workday look like for you?
+What skill would you love to master in the next five years?
+What do you wish you’d known when you started working?
+What makes you lose track of time?
+What’s a goal you have that has nothing to do with work?
+What advice would you give your 18-year-old self?
+What’s the best decision you’ve made in the last year?
+How do you recharge when you’re completely drained?
+What’s something about you that most people here probably don’t know?
+What’s something that used to scare you but doesn’t anymore?
+What moment from the past year would you happily relive?
+What kind of feedback helps you the most?
+What’s something you’re grateful for this week?
+What’s the most useful thing you’ve learned from a colleague?
+What’s a risk you took that paid off?
+Where in the world do you feel most at home?
+What’s something you’d like to be known for?
+What’s a value you try to live by, even when it’s inconvenient?
+
+# Team stuff
+What’s the best thing our team pulled off this year?
+Which project would you happily do all over again?
+What’s something this team does better than any team you’ve worked with?
+What’s a team tradition we should start?
+If our team had a mascot, what would it be?
+What would our team’s theme song be?
+What’s the best tip or shortcut you’ve picked up from someone here?
+What’s the funniest thing that’s happened on a call with this team?
+If we had a team offsite anywhere in the world, where should it be?
+What’s something you’d like to learn from someone on this team?
+What’s a small win from this week that deserves more credit?
+How should we celebrate when a big release goes live?
+Which emoji best describes our team this week?
+What’s something about your role that the rest of us might not know?
+</script>
+
+<script>
+(function () {
+  'use strict';
+
+  // Snapshot of the page as loaded; "Download updated page" rewrites its question list.
+  const ORIGINAL_SOURCE = '<!DOCTYPE html>\n' + document.documentElement.outerHTML;
+
+  const KEY = 'icebreaker.v3.';
+  const store = {
+    get(key, fallback) {
+      try {
+        const v = localStorage.getItem(KEY + key);
+        return v === null ? fallback : JSON.parse(v);
+      } catch (e) { return fallback; }
+    },
+    set(key, value) {
+      try { localStorage.setItem(KEY + key, JSON.stringify(value)); } catch (e) { /* storage unavailable */ }
+    }
+  };
+  // Carry over what an earlier version remembered in this browser, once.
+  (function migrateFromOlder() {
+    try {
+      if (localStorage.getItem(KEY + 'migrated')) return;
+      const from = localStorage.getItem('icebreaker.v2.migrated') !== null ? 'icebreaker.v2.' : 'icebreaker.v1.';
+      ['asked', 'custom', 'removed', 'moved', 'catOrder', 'turns', 'participants'].forEach((k) => {
+        const old = localStorage.getItem(from + k);
+        if (old !== null && localStorage.getItem(KEY + k) === null) localStorage.setItem(KEY + k, old);
+      });
+      localStorage.setItem(KEY + 'migrated', '1');
+    } catch (e) { /* storage unavailable */ }
+  })();
+  const storedArray = (key) => { const v = store.get(key, []); return Array.isArray(v) ? v : []; };
+
+  const CAT_STYLES = {
+    'light & fun':      { bg: '#F6C945', ink: '#2B2206' },
+    'would you rather': { bg: '#A9C1FF', ink: '#111A3A' },
+    'hot takes':        { bg: '#FF86AC', ink: '#3A0A1C' },
+    'stories':          { bg: '#86DDBB', ink: '#0D2E22' },
+    'a bit deeper':     { bg: '#2E3A8C', ink: '#F2F3FF' },
+    'team stuff':       { bg: '#FFB86B', ink: '#3A2206' }
+  };
+  const FALLBACK_STYLES = [
+    { bg: '#9FE0F0', ink: '#0B2A33' },
+    { bg: '#D9F27A', ink: '#26300A' },
+    { bg: '#C9B6F5', ink: '#1F1240' }
+  ];
+  const DEFAULT_CATS = ['Light & fun', 'Would you rather', 'Hot takes', 'Stories', 'A bit deeper'];
+  // Categories with longer answers are skipped when everyone answers the same question.
+  const LONG_CATS = ['stories', 'a bit deeper'];
+
+  const GREETINGS = [
+    ['Tjena', 'Swedish'], ['Hej', 'Danish'], ['Cześć', 'Polish'], ['Hoi', 'Dutch'],
+    ['Merhaba', 'Turkish'], ['Namaste', 'Hindi'], ['Hola', 'Spanish'], ['Ciao', 'Italian'],
+    ['Salut', 'French'], ['Moin', 'North German'], ['Ahoj', 'Czech'], ['Olá', 'Portuguese'],
+    ['Szia', 'Hungarian'], ['Hei', 'Finnish'], ['Kia ora', 'Māori'], ['Aloha', 'Hawaiian'],
+    ['Labas', 'Lithuanian'], ['Yassou', 'Greek'], ['Hey', 'English']
+  ];
+
+  const ICON_X = '<svg viewBox="0 0 14 14" aria-hidden="true"><path d="M2 2l10 10M12 2L2 12" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" fill="none"/></svg>';
+  const ICON_EXPAND = '<svg viewBox="0 0 16 16" aria-hidden="true"><path d="M2 6V2h4M10 2h4v4M14 10v4h-4M6 14H2v-4" stroke="currentColor" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round"/></svg>';
+  const ICON_SHRINK = '<svg viewBox="0 0 16 16" aria-hidden="true"><path d="M6 2v4H2M14 6h-4V2M10 14v-4h4M2 10h4v4" stroke="currentColor" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round"/></svg>';
+
+  const $ = (id) => document.getElementById(id);
+  const rand = (arr) => arr[Math.floor(Math.random() * arr.length)];
+  const shuffle = (arr) => {
+    const a = arr.slice();
+    for (let i = a.length - 1; i > 0; i--) {
+      const j = Math.floor(Math.random() * (i + 1));
+      [a[i], a[j]] = [a[j], a[i]];
+    }
+    return a;
+  };
+  const norm = (t) => t.replace(/[’‘]/g, "'").replace(/[“”]/g, '"').replace(/\s+/g, ' ').trim().toLowerCase();
+  const idOf = (text) => {
+    let h = 5381;
+    const s = norm(text);
+    for (let i = 0; i < s.length; i++) h = (Math.imul(h, 33) + s.charCodeAt(i)) | 0;
+    return (h >>> 0).toString(36);
+  };
+  const cleanText = (t) => String(t).replace(/[<>]/g, '').replace(/^#+\s*/, '').replace(/\s+/g, ' ').trim().slice(0, 300);
+  const cleanCat = (t) => String(t).replace(/^#+/, '').replace(/[<>]/g, '').replace(/\s+/g, ' ').trim().slice(0, 60);
+  const cleanName = (n) => String(n).replace(/[,<>]/g, '').replace(/\s+/g, ' ').trim().slice(0, 40);
+
+  /* ---------- Question list text format ---------- */
+  function parseList(text, knownCats) {
+    const known = knownCats || [];
+    const cats = [];
+    const items = [];
+    const seen = new Set();
+    let cat = null;
+    String(text).split(/\r?\n/).forEach((raw) => {
+      const line = raw.trim();
+      if (!line) return;
+      if (line.charAt(0) === '#') {
+        const name = cleanCat(line);
+        if (name) {
+          const same = cats.concat(known).find((c) => c.toLowerCase() === name.toLowerCase());
+          cat = same || name;
+          if (!cats.includes(cat)) cats.push(cat);
+        }
+        return;
+      }
+      const t = cleanText(line);
+      if (!t) return;
+      if (!cat) { cat = 'Other'; if (!cats.includes(cat)) cats.push(cat); }
+      const id = idOf(t);
+      if (seen.has(id)) return;
+      seen.add(id);
+      items.push({ id, text: t, cat });
+    });
+    return { cats, items };
+  }
+
+  /* ---------- Question bank (from the file) plus this browser's changes ---------- */
+  const bank = parseList($('question-bank').textContent);
+  const bankById = new Map(bank.items.map((q) => [q.id, q]));
+
+  let custom = storedArray('custom').filter((c) => c && typeof c.text === 'string' && typeof c.cat === 'string');
+  let removed = new Set(storedArray('removed'));
+  let moved = store.get('moved', {});
+  if (!moved || typeof moved !== 'object' || Array.isArray(moved)) moved = {};
+  let catOrder = storedArray('catOrder').filter((c) => typeof c === 'string');
+  let asked = new Set(storedArray('asked'));
+  let turns = storedArray('turns');
+  const openCats = new Set();
+
+  // Drop changes that the file itself now contains (e.g. after uploading a downloaded page).
+  (function pruneChanges() {
+    const seen = new Set();
+    custom = custom.filter((c) => {
+      const id = idOf(c.text);
+      if (bankById.has(id) || seen.has(id)) return false;
+      seen.add(id);
+      return true;
+    });
+    removed = new Set(Array.from(removed).filter((id) => bankById.has(id)));
+    Object.keys(moved).forEach((id) => {
+      const q = bankById.get(id);
+      if (!q || q.cat === moved[id] || removed.has(id) || typeof moved[id] !== 'string') delete moved[id];
+    });
+    const keptOrder = catOrder.filter((c) => bank.cats.includes(c));
+    if (!custom.length && !removed.size && !Object.keys(moved).length &&
+        keptOrder.length === catOrder.length && keptOrder.join('\n') === bank.cats.filter((c) => keptOrder.includes(c)).join('\n')) {
+      catOrder = [];
+    }
+    saveChanges();
+  })();
+
+  function saveChanges() {
+    store.set('custom', custom);
+    store.set('removed', Array.from(removed));
+    store.set('moved', moved);
+    store.set('catOrder', catOrder);
+  }
+
+  function allQuestions() {
+    const list = bank.items.map((q) => ({ id: q.id, text: q.text, cat: moved[q.id] || q.cat, custom: false }));
+    custom.forEach((c) => list.push({ id: idOf(c.text), text: c.text, cat: c.cat, custom: true }));
+    return list;
+  }
+  const activeQuestions = () => allQuestions().filter((q) => !removed.has(q.id));
+
+  function categories() {
+    const active = activeQuestions();
+    const cats = [];
+    const add = (c) => { if (c && !cats.includes(c)) cats.push(c); };
+    catOrder.forEach(add);
+    bank.cats.forEach((c) => { if (active.some((q) => q.cat === c)) add(c); });
+    active.forEach((q) => add(q.cat));
+    if (!cats.length) DEFAULT_CATS.forEach(add);
+    return cats;
+  }
+
+  function styleFor(cat) {
+    const known = cat && CAT_STYLES[cat.toLowerCase()];
+    if (known) return known;
+    const unknown = categories().filter((c) => !CAT_STYLES[c.toLowerCase()]);
+    return FALLBACK_STYLES[Math.max(0, unknown.indexOf(cat)) % FALLBACK_STYLES.length];
+  }
+
+  function listAsText() {
+    const active = activeQuestions();
+    const blocks = [];
+    categories().forEach((cat) => {
+      const qs = active.filter((q) => q.cat === cat);
+      if (!qs.length && !catOrder.includes(cat)) return;
+      blocks.push(['# ' + cat].concat(qs.map((q) => q.text)).join('\n'));
+    });
+    return blocks.join('\n\n') + '\n';
+  }
+
+  const changeCounts = () => ({ added: custom.length, removed: removed.size, moved: Object.keys(moved).length });
+
+  /* ---------- Participants ---------- */
+  function readParticipants() {
+    const param = new URLSearchParams(location.search).get('participants');
+    const raw = param !== null ? param.split(',') : storedArray('participants');
+    const out = [];
+    raw.forEach((n) => {
+      const c = cleanName(n);
+      if (c && !out.some((o) => o.toLowerCase() === c.toLowerCase())) out.push(c);
+    });
+    return out;
+  }
+  let participants = readParticipants();
+
+  function saveParticipants() {
+    store.set('participants', participants);
+    try {
+      const url = new URL(location.href);
+      if (participants.length) url.searchParams.set('participants', participants.join(','));
+      else url.searchParams.delete('participants');
+      history.replaceState(null, '', url.toString());
+    } catch (e) { /* some browsers block this for local files */ }
+  }
+
+  /* ---------- Picking ---------- */
+  const state = {
+    mode: 'one',          // 'one' = one person answers, 'all' = everyone answers
+    person: null,
+    order: [],
+    done: new Set(),
+    q: null,
+    greet: rand(GREETINGS),
+    lastCat: null,
+    presenting: false
+  };
+
+  // Everyone gets a turn before anyone is picked again (remembered between visits).
+  function pickPerson() {
+    if (!participants.length) return null;
+    let bag = turns.filter((n) => participants.includes(n));
+    if (!bag.length) bag = participants.slice();
+    let options = bag.length > 1 ? bag.filter((n) => n !== state.person) : bag;
+    if (!options.length) options = bag;
+    const chosen = rand(options);
+    turns = bag.filter((n) => n !== chosen);
+    store.set('turns', turns);
+    return chosen;
+  }
+
+  // Unasked questions first, avoiding the same category twice in a row.
+  // With quick: true, prefer categories that suit a fast round for everyone.
+  function pickQuestion(opts) {
+    const quick = !!(opts && opts.quick);
+    const active = activeQuestions();
+    if (!active.length) return null;
+    const currentId = state.q ? state.q.id : null;
+    const isQuick = (q) => !LONG_CATS.includes(q.cat.toLowerCase());
+    const unasked = active.filter((q) => !asked.has(q.id) && q.id !== currentId);
+    let pool = quick ? unasked.filter(isQuick) : unasked;
+    if (!pool.length) pool = unasked;
+    let reshuffled = false;
+    if (!pool.length) {
+      asked = new Set();
+      reshuffled = active.length > 1;
+      const rest = active.filter((q) => q.id !== currentId);
+      const restQuick = rest.filter(isQuick);
+      pool = quick && restQuick.length ? restQuick : (rest.length ? rest : active);
+    }
+    const varied = pool.filter((q) => q.cat !== state.lastCat);
+    const q = rand(varied.length ? varied : pool);
+    asked.add(q.id);
+    store.set('asked', Array.from(asked));
+    state.lastCat = q.cat;
+    if (reshuffled) toast('You’ve been through every question, so the deck starts over.');
+    return q;
+  }
+
+  // After the list changes, make sure the question on screen still exists.
+  function ensureCurrentQuestion() {
+    const active = activeQuestions();
+    const found = state.q && active.find((q) => q.id === state.q.id);
+    if (found) { state.q = found; return false; }
+    state.q = pickQuestion({ quick: state.mode === 'all' });
+    return true;
+  }
+
+  /* ---------- Rendering ---------- */
+  function iconButton(label, onClick) {
+    const b = document.createElement('button');
+    b.type = 'button';
+    b.className = 'icon-btn';
+    b.setAttribute('aria-label', label);
+    b.title = label;
+    b.innerHTML = ICON_X;
+    b.addEventListener('click', onClick);
+    return b;
+  }
+  function tag(text) {
+    const s = document.createElement('span');
+    s.className = 'tag';
+    s.textContent = text;
+    return s;
+  }
+
+  function renderPresentButton() {
+    const b = $('btnPresent');
+    b.innerHTML = (state.presenting ? ICON_SHRINK : ICON_EXPAND) + '<span></span>';
+    b.querySelector('span').textContent = state.presenting ? 'Exit' : 'Present';
+    b.setAttribute('aria-pressed', String(state.presenting));
+    b.title = state.presenting ? 'Exit presentation mode (Esc)' : 'Presentation mode (P)';
+  }
+
+  function renderOrder() {
+    const box = $('order');
+    const list = $('orderList');
+    box.hidden = state.mode !== 'all';
+    list.textContent = '';
+    if (state.mode !== 'all') return;
+    state.order.forEach((name, i) => {
+      const li = document.createElement('li');
+      const b = document.createElement('button');
+      b.type = 'button';
+      b.setAttribute('aria-pressed', String(state.done.has(name)));
+      b.title = state.done.has(name) ? 'Mark as not answered' : 'Mark as answered';
+      const n = document.createElement('span');
+      n.className = 'n';
+      n.textContent = (i + 1) + '.';
+      const t = document.createElement('span');
+      t.textContent = name;
+      b.append(n, t);
+      b.addEventListener('click', () => {
+        if (state.done.has(name)) state.done.delete(name); else state.done.add(name);
+        b.setAttribute('aria-pressed', String(state.done.has(name)));
+        b.title = state.done.has(name) ? 'Mark as not answered' : 'Mark as answered';
+      });
+      li.append(b);
+      list.append(li);
+    });
+  }
+
+  function renderCard(animate) {
+    const card = $('card');
+    const deck = $('deck');
+    const q = state.q;
+    const cats = categories();
+    const st = styleFor(q ? q.cat : cats[0]);
+    card.style.setProperty('--card', st.bg);
+    card.style.setProperty('--card-ink', st.ink);
+    const i = q ? Math.max(0, cats.indexOf(q.cat)) : 0;
+    deck.style.setProperty('--back1', styleFor(cats[(i + 1) % cats.length]).bg);
+    deck.style.setProperty('--back2', styleFor(cats[(i + 2) % cats.length]).bg);
+
+    $('catLabel').textContent = q ? q.cat : 'No questions yet';
+    const g = $('greeting');
+    g.textContent = '';
+    const word = document.createElement('span');
+    word.textContent = state.greet[0];
+    word.title = state.greet[1];
+    const who = state.mode === 'all' || !state.person ? 'everyone' : state.person;
+    g.append(word, ' ' + who + ',');
+    $('question').textContent = q ? q.text : 'Add a question below to get started.';
+    renderOrder();
+
+    const many = participants.length >= 2;
+    const sw = $('modeSwitch');
+    sw.hidden = !many;
+    sw.querySelectorAll('button').forEach((b) => b.setAttribute('aria-pressed', String(b.dataset.mode === state.mode)));
+    const same = $('btnSame');
+    same.textContent = state.mode === 'all'
+      ? 'New question for everyone'
+      : (state.person ? 'New question for ' + state.person : 'New question');
+    same.className = 'btn ' + (state.mode === 'all' ? 'btn-primary' : 'btn-ghost');
+    $('btnNext').hidden = !many || state.mode === 'all';
+
+    const active = activeQuestions();
+    const left = active.filter((x) => !asked.has(x.id)).length;
+    $('left').textContent = active.length
+      ? left + ' of ' + active.length + ' questions left before any repeat'
+      : '';
+
+    if (animate) {
+      card.classList.remove('deal');
+      void card.offsetWidth;
+      card.classList.add('deal');
+    }
+    fitQuestion();
+  }
+
+  // In presentation mode, shrink the question until the whole card fits on screen.
+  function fitQuestion() {
+    const card = $('card');
+    const qEl = $('question');
+    qEl.style.fontSize = '';
+    qEl.style.maxWidth = '';
+    if (!state.presenting || card.scrollHeight <= card.clientHeight + 1) return;
+    // Keep the line width while shrinking, so smaller text uses fewer lines.
+    qEl.style.maxWidth = Math.min(qEl.getBoundingClientRect().width, card.clientWidth) + 'px';
+    let size = parseFloat(getComputedStyle(qEl).fontSize);
+    for (let i = 0; i < 40 && card.scrollHeight > card.clientHeight + 1 && size > 20; i++) {
+      size = Math.max(20, size * 0.93);
+      qEl.style.fontSize = size + 'px';
+    }
+  }
+  let fitFrame = 0;
+  window.addEventListener('resize', () => {
+    cancelAnimationFrame(fitFrame);
+    fitFrame = requestAnimationFrame(fitQuestion);
+  });
+
+  function renderParticipants() {
+    const ul = $('chips');
+    ul.textContent = '';
+    participants.forEach((name) => {
+      const li = document.createElement('li');
+      li.className = 'chip';
+      if (state.mode === 'one' && name === state.person) li.setAttribute('aria-current', 'true');
+      const span = document.createElement('span');
+      span.textContent = name;
+      li.append(span, iconButton('Remove ' + name, () => removePerson(name)));
+      ul.append(li);
+    });
+    $('pCount').textContent = participants.length ? String(participants.length) : '';
+    $('pEmpty').hidden = participants.length > 0;
+  }
+
+  function renderQuestions() {
+    const cats = categories();
+    const active = activeQuestions();
+    $('qCount').textContent = String(active.length);
+
+    const sel = $('newCat');
+    const prev = sel.value;
+    sel.textContent = '';
+    cats.forEach((c) => {
+      const o = document.createElement('option');
+      o.value = c;
+      o.textContent = c;
+      sel.append(o);
+    });
+    if (cats.includes(prev)) sel.value = prev;
+
+    const box = $('catList');
+    box.querySelectorAll('details').forEach((d) => {
+      if (d.open) openCats.add(d.dataset.cat); else openCats.delete(d.dataset.cat);
+    });
+    box.textContent = '';
+    cats.forEach((cat) => {
+      const qs = active.filter((q) => q.cat === cat);
+      const d = document.createElement('details');
+      d.className = 'cat';
+      d.dataset.cat = cat;
+      d.open = openCats.has(cat);
+
+      const s = document.createElement('summary');
+      const dot = document.createElement('span');
+      dot.className = 'dot';
+      dot.style.background = styleFor(cat).bg;
+      const name = document.createElement('span');
+      name.textContent = cat;
+      const n = document.createElement('span');
+      n.className = 'count';
+      n.textContent = String(qs.length);
+      s.append(dot, name, n);
+      d.append(s);
+
+      const ul = document.createElement('ul');
+      ul.className = 'qlist';
+      if (!qs.length) {
+        const li = document.createElement('li');
+        li.className = 'is-asked';
+        const t = document.createElement('span');
+        t.className = 'qtext';
+        t.textContent = 'No questions in this category.';
+        li.append(t);
+        ul.append(li);
+      }
+      qs.forEach((q) => {
+        const li = document.createElement('li');
+        const t = document.createElement('span');
+        t.className = 'qtext';
+        t.textContent = q.text;
+        if (state.q && q.id === state.q.id) t.append(tag('On screen'));
+        else if (asked.has(q.id)) { li.classList.add('is-asked'); t.append(tag('Asked')); }
+        if (q.custom) t.append(tag('Added by you'));
+        li.append(t, iconButton('Remove question', () => removeQuestion(q)));
+        ul.append(li);
+      });
+      d.append(ul);
+      box.append(d);
+    });
+
+    const c = changeCounts();
+    const parts = [];
+    if (c.added) parts.push(c.added + ' added');
+    if (c.removed) parts.push(c.removed + ' removed');
+    if (c.moved) parts.push(c.moved + ' moved');
+    const note = $('changeNote');
+    $('undoChanges').hidden = parts.length === 0;
+    if (parts.length) {
+      note.textContent = 'This browser has changes that aren’t in the file yet (' + parts.join(', ') +
+        '). To share them with everyone, download the updated page and upload it in place of the old one.';
+      note.classList.add('has-changes');
+    } else {
+      note.textContent = 'Changes you make here are saved in this browser only. To share them with everyone, download the updated page and upload it in place of the old one.';
+      note.classList.remove('has-changes');
+    }
+  }
+
+  function renderAll(animate) {
+    renderCard(animate);
+    renderParticipants();
+    renderQuestions();
+  }
+
+  /* ---------- Card actions ---------- */
+  function nextPerson() {
+    if (participants.length < 2 && state.mode === 'one') return;
+    state.mode = 'one';
+    state.person = pickPerson();
+    state.greet = rand(GREETINGS);
+    state.q = pickQuestion();
+    renderAll(true);
+  }
+  function newQuestion() {
+    if (state.mode === 'all') {
+      state.order = shuffle(participants);
+      state.done = new Set();
+      state.q = pickQuestion({ quick: true });
+    } else {
+      state.q = pickQuestion();
+    }
+    renderCard(true);
+    renderQuestions();
+  }
+  function askEveryone() {
+    if (participants.length < 2) return;
+    state.mode = 'all';
+    state.order = shuffle(participants);
+    state.done = new Set();
+    state.greet = rand(GREETINGS);
+    state.q = pickQuestion({ quick: true });
+    renderAll(true);
+  }
+  function setMode(mode) {
+    if (mode === state.mode || participants.length < 2) return;
+    if (mode === 'all') askEveryone();
+    else nextPerson();
+  }
+  function setPresenting(on) {
+    state.presenting = on;
+    document.body.classList.toggle('presenting', on);
+    renderPresentButton();
+    window.scrollTo(0, 0);
+    fitQuestion();
+    try {
+      const url = new URL(location.href);
+      if (on) url.searchParams.set('present', '1'); else url.searchParams.delete('present');
+      history.replaceState(null, '', url.toString());
+    } catch (e) { /* some browsers block this for local files */ }
+  }
+
+  /* ---------- Participant actions ---------- */
+  function addPerson(e) {
+    e.preventDefault();
+    const input = $('personName');
+    const name = cleanName(input.value);
+    const msg = $('personMsg');
+    if (!name) { msg.textContent = 'Type a name first.'; return; }
+    const already = participants.find((n) => n.toLowerCase() === name.toLowerCase());
+    if (already) { msg.textContent = already + ' is already on the list.'; return; }
+    participants.push(name);
+    if (turns.length) { turns.push(name); store.set('turns', turns); }
+    if (state.mode === 'all') state.order.push(name);
+    input.value = '';
+    msg.textContent = '';
+    saveParticipants();
+    if (!state.person && state.mode === 'one') {
+      state.person = pickPerson();
+      state.greet = rand(GREETINGS);
+      renderCard(true);
+    } else {
+      renderCard(false);
+    }
+    renderParticipants();
+    input.focus();
+  }
+
+  function removePerson(name) {
+    const index = participants.indexOf(name);
+    participants = participants.filter((n) => n !== name);
+    turns = turns.filter((n) => n !== name);
+    store.set('turns', turns);
+    state.order = state.order.filter((n) => n !== name);
+    state.done.delete(name);
+    saveParticipants();
+    let animate = false;
+    if (state.mode === 'all' && participants.length < 2) {
+      state.mode = 'one';
+      state.person = null;
+    }
+    if (state.person === name) {
+      state.person = null;
+      if (state.mode === 'one') {
+        state.person = pickPerson();
+        state.greet = rand(GREETINGS);
+        animate = true;
+      }
+    }
+    if (state.mode === 'one' && !state.person && participants.length) {
+      state.person = pickPerson();
+      animate = true;
+    }
+    renderCard(animate);
+    renderParticipants();
+    const buttons = $('chips').querySelectorAll('.icon-btn');
+    (buttons[Math.min(index, buttons.length - 1)] || $('personName')).focus();
+  }
+
+  /* ---------- Question actions ---------- */
+  // Snapshots of this browser's question changes, for the Undo button in messages.
+  const snapshot = () => JSON.stringify({ custom, removed: Array.from(removed), moved, catOrder });
+  function restoreSnapshot(snap) {
+    const s = JSON.parse(snap);
+    custom = s.custom;
+    removed = new Set(s.removed);
+    moved = s.moved;
+    catOrder = s.catOrder;
+    saveChanges();
+    afterListChange();
+  }
+
+  function afterListChange() {
+    const changed = ensureCurrentQuestion();
+    renderCard(changed);
+    renderQuestions();
+  }
+
+  function addQuestion(e) {
+    e.preventDefault();
+    const input = $('newQ');
+    const text = cleanText(input.value);
+    const cat = $('newCat').value;
+    const msg = $('qMsg');
+    if (!text) { msg.textContent = 'Type a question first.'; return; }
+    const id = idOf(text);
+    const existing = allQuestions().find((q) => q.id === id);
+    if (existing && !removed.has(id)) { msg.textContent = 'That question is already in the list.'; return; }
+    if (existing) {
+      removed.delete(id);
+      openCats.add(existing.cat);
+      msg.textContent = 'You removed that one earlier, so it’s back in ' + existing.cat + '.';
+    } else {
+      custom.push({ text, cat });
+      openCats.add(cat);
+      msg.textContent = 'Added to ' + cat + '.';
+    }
+    saveChanges();
+    input.value = '';
+    afterListChange();
+  }
+
+  function removeQuestion(q) {
+    const snap = snapshot();
+    const index = activeQuestions().filter((x) => x.cat === q.cat).findIndex((x) => x.id === q.id);
+    if (q.custom) {
+      custom = custom.filter((c) => idOf(c.text) !== q.id);
+    } else {
+      removed.add(q.id);
+      delete moved[q.id];
+    }
+    saveChanges();
+    afterListChange();
+    const group = Array.from($('catList').querySelectorAll('details')).find((d) => d.dataset.cat === q.cat);
+    if (group) {
+      const buttons = group.querySelectorAll('.qlist .icon-btn');
+      (buttons[Math.min(index, buttons.length - 1)] || group.querySelector('summary')).focus();
+    }
+    toast(q.custom ? 'Question deleted.' : 'Question removed.', {
+      label: 'Undo',
+      run: () => { restoreSnapshot(snap); toast('Question restored.'); }
+    });
+  }
+
+  function openBulkEditor() {
+    $('bulkText').value = listAsText();
+    $('bulkMsg').textContent = '';
+    $('qView').hidden = true;
+    $('qActions').hidden = true;
+    $('editText').hidden = true;
+    $('qBulk').hidden = false;
+    $('bulkText').focus();
+    $('bulkText').setSelectionRange(0, 0);
+    $('bulkText').scrollTop = 0;
+  }
+  function closeBulkEditor() {
+    $('qBulk').hidden = true;
+    $('qView').hidden = false;
+    $('qActions').hidden = false;
+    $('editText').hidden = false;
+    $('editText').focus();
+  }
+  function saveBulk() {
+    const parsed = parseList($('bulkText').value, categories().concat(bank.cats));
+    if (!parsed.items.length) {
+      $('bulkMsg').textContent = 'The list is empty. Add at least one question before saving.';
+      return;
+    }
+    const before = new Map(activeQuestions().map((q) => [q.id, q.cat]));
+    const snap = snapshot();
+
+    const byId = new Map(parsed.items.map((it) => [it.id, it]));
+    removed = new Set();
+    moved = {};
+    bank.items.forEach((q) => {
+      const it = byId.get(q.id);
+      if (!it) removed.add(q.id);
+      else if (it.cat !== q.cat) moved[q.id] = it.cat;
+    });
+    custom = parsed.items.filter((it) => !bankById.has(it.id)).map((it) => ({ text: it.text, cat: it.cat }));
+    catOrder = parsed.cats;
+    saveChanges();
+
+    let added = 0, gone = 0, recat = 0;
+    parsed.items.forEach((it) => {
+      if (!before.has(it.id)) added++;
+      else if (before.get(it.id) !== it.cat) recat++;
+    });
+    before.forEach((cat, id) => { if (!byId.has(id)) gone++; });
+    const parts = [];
+    if (added) parts.push(added + ' added');
+    if (gone) parts.push(gone + ' removed');
+    if (recat) parts.push(recat + ' moved');
+
+    closeBulkEditor();
+    afterListChange();
+    if (parts.length) {
+      toast('Saved: ' + parts.join(', ') + '.', {
+        label: 'Undo',
+        run: () => { restoreSnapshot(snap); toast('Changes undone.'); }
+      });
+    } else {
+      toast('No changes to save.');
+    }
+  }
+
+  function resetAsked() {
+    asked = new Set(state.q ? [state.q.id] : []);
+    store.set('asked', Array.from(asked));
+    renderCard(false);
+    renderQuestions();
+    toast('All questions are back in the deck.');
+  }
+
+  function undoChanges() {
+    if (!window.confirm('Undo all question changes made in this browser and go back to the list in the file?')) return;
+    custom = [];
+    removed = new Set();
+    moved = {};
+    catOrder = [];
+    saveChanges();
+    afterListChange();
+    toast('Back to the list in the file.');
+  }
+
+  const FILE_NAME = (() => {
+    let last = '';
+    try { last = decodeURIComponent(location.pathname.split('/').pop() || ''); } catch (e) { last = ''; }
+    return /\.html?$/i.test(last) ? last : 'index.html';
+  })();
+
+  // The page file as it is on the server; falls back to the page as first loaded (e.g. for a local file).
+  async function pageSource(re) {
+    try {
+      const res = await fetch(location.origin + location.pathname, { cache: 'no-store' });
+      if (res.ok) {
+        const text = await res.text();
+        if (re.test(text)) return text;
+      }
+    } catch (e) { /* not available here */ }
+    return ORIGINAL_SOURCE;
+  }
+
+  async function downloadPage() {
+    const text = listAsText();
+    const re = /(<script type="text\/plain" id="question-bank">)[\s\S]*?(<\/script>)/;
+    const source = await pageSource(re);
+    if (!re.test(source)) {
+      toast('Couldn’t build the file. Edit the question list in the file directly instead.');
+      return;
+    }
+    const out = source.replace(re, (m, open, close) => open + '\n' + text + close);
+    const blob = new Blob([out], { type: 'text/html' });
+    const a = document.createElement('a');
+    a.href = URL.createObjectURL(blob);
+    a.download = FILE_NAME;
+    document.body.append(a);
+    a.click();
+    a.remove();
+    setTimeout(() => URL.revokeObjectURL(a.href), 2000);
+    toast('Downloaded ' + FILE_NAME + '. Upload it in place of the old file to share your list.');
+  }
+
+  async function copyLink() {
+    saveParticipants();
+    const presentLink = $('linkPresent').checked;
+    let link = location.href;
+    try {
+      const url = new URL(location.href);
+      if (presentLink) url.searchParams.set('present', '1'); else url.searchParams.delete('present');
+      link = url.toString();
+    } catch (e) { /* keep the current address */ }
+    let ok = false;
+    try {
+      await navigator.clipboard.writeText(link);
+      ok = true;
+    } catch (e) {
+      const ta = document.createElement('textarea');
+      ta.value = link;
+      ta.setAttribute('readonly', '');
+      ta.style.position = 'fixed';
+      ta.style.opacity = '0';
+      document.body.append(ta);
+      ta.select();
+      try { ok = document.execCommand('copy'); } catch (e2) { ok = false; }
+      ta.remove();
+    }
+    toast(ok
+      ? (presentLink ? 'Team link copied. It opens in presentation mode.' : 'Team link copied.')
+      : 'Couldn’t copy automatically. Copy the address from your browser’s address bar.');
+  }
+
+  let toastTimer = null;
+  function toast(text, action) {
+    const t = $('toast');
+    t.textContent = '';
+    const msg = document.createElement('span');
+    msg.textContent = text;
+    t.append(msg);
+    t.classList.toggle('has-action', !!action);
+    if (action) {
+      const b = document.createElement('button');
+      b.type = 'button';
+      b.className = 'toast-action';
+      b.textContent = action.label;
+      b.addEventListener('click', () => {
+        t.classList.remove('show');
+        action.run();
+      });
+      t.append(b);
+    }
+    t.classList.add('show');
+    clearTimeout(toastTimer);
+    toastTimer = setTimeout(() => t.classList.remove('show'), action ? 7000 : 3400);
+  }
+
+  /* ---------- Wire up ---------- */
+  $('btnNext').addEventListener('click', nextPerson);
+  $('btnSame').addEventListener('click', newQuestion);
+  $('modeSwitch').querySelectorAll('button').forEach((b) => {
+    b.addEventListener('click', () => setMode(b.dataset.mode));
+  });
+  $('btnPresent').addEventListener('click', () => setPresenting(!state.presenting));
+  $('addPerson').addEventListener('submit', addPerson);
+  $('addQuestion').addEventListener('submit', addQuestion);
+  $('copyLink').addEventListener('click', copyLink);
+  $('resetAsked').addEventListener('click', resetAsked);
+  $('undoChanges').addEventListener('click', undoChanges);
+  $('download').addEventListener('click', downloadPage);
+  $('editText').addEventListener('click', openBulkEditor);
+  $('bulkSave').addEventListener('click', saveBulk);
+  $('bulkCancel').addEventListener('click', closeBulkEditor);
+  document.addEventListener('keydown', (e) => {
+    if (e.key === 'Escape' && state.presenting) { setPresenting(false); return; }
+    if (e.ctrlKey || e.metaKey || e.altKey || e.repeat) return;
+    const t = e.target;
+    if (t && t.closest && t.closest('input, textarea, select, [contenteditable]')) return;
+    const k = e.key.toLowerCase();
+    if (k === 'n' && participants.length > 1) { e.preventDefault(); nextPerson(); }
+    else if (k === 'q') { e.preventDefault(); newQuestion(); }
+    else if (k === 'e' && participants.length > 1) { e.preventDefault(); setMode(state.mode === 'all' ? 'one' : 'all'); }
+    else if (k === 'p') { e.preventDefault(); setPresenting(!state.presenting); }
+  });
+
+  saveParticipants();
+  state.person = pickPerson();
+  state.q = pickQuestion();
+  renderPresentButton();
+  if (new URLSearchParams(location.search).get('present') === '1') setPresenting(true);
+  renderAll(true);
+})();
+</script>
+</body>
+</html>
