@@ -287,6 +287,45 @@ input[type="text"], select, textarea {
 .help { margin: .5rem 0 0; color: var(--muted); font-size: .88rem; max-width: 62ch; }
 .help.has-changes { color: var(--ink); }
 .linkbox { padding-top: 1rem; border-top: 1px solid var(--line); }
+
+/* Setup steps, shown only on the plain link (without names) */
+.setup { margin: 0 0 1.25rem; padding: 1rem 1.25rem 1.15rem; background: var(--surface); border: 1px solid var(--line); border-radius: 14px; }
+.setup-head { display: flex; align-items: center; justify-content: space-between; gap: 1rem; margin-bottom: .8rem; }
+.setup-head h2 { margin: 0; font-size: 1.05rem; }
+.steps { display: grid; grid-template-columns: 1fr; gap: .8rem 1.5rem; margin: 0; padding: 0; list-style: none; }
+@media (min-width: 760px) { .steps { grid-template-columns: repeat(3, minmax(0, 1fr)); } }
+.steps li { display: flex; align-items: flex-start; gap: .7rem; }
+.step-mark {
+  display: inline-grid;
+  place-items: center;
+  flex: none;
+  width: 1.75rem;
+  height: 1.75rem;
+  border: 1.5px solid var(--line);
+  border-radius: 50%;
+  color: var(--muted);
+  font-size: .9rem;
+  font-weight: 700;
+}
+.steps li.current .step-mark { border-color: var(--accent); color: var(--accent); }
+.steps li.done .step-mark { border-color: var(--accent); background: var(--accent); color: var(--accent-ink); }
+.step-btn {
+  padding: 0;
+  border: 0;
+  background: none;
+  color: var(--accent);
+  font: inherit;
+  font-weight: 600;
+  text-align: left;
+  text-decoration: underline;
+  text-underline-offset: 3px;
+  cursor: pointer;
+}
+.step-btn:disabled { color: var(--muted); text-decoration: none; cursor: default; }
+.step-text { margin: 0; font-weight: 600; }
+.steps li:not(.current):not(.done) .step-text { color: var(--muted); }
+.step-note { margin: .1rem 0 0; color: var(--muted); font-size: .9rem; }
+body.presenting .setup { display: none; }
 .check { display: flex; align-items: center; gap: .5rem; margin-top: .75rem; font-size: .95rem; cursor: pointer; }
 .check input { width: 1.1rem; height: 1.1rem; margin: 0; accent-color: var(--accent); }
 
@@ -395,6 +434,36 @@ input[type="text"], select, textarea {
   <header class="top">
     <h1>Icebreaker</h1>
   </header>
+
+  <section class="setup" id="setup" aria-labelledby="setupTitle" hidden>
+    <div class="setup-head">
+      <h2 id="setupTitle">Set up your team</h2>
+      <button type="button" class="icon-btn" id="setupHide" aria-label="Hide setup steps" title="Hide setup steps"></button>
+    </div>
+    <ol class="steps">
+      <li id="step1">
+        <span class="step-mark" aria-hidden="true">1</span>
+        <div>
+          <button type="button" class="step-btn" id="stepAdd">Add your team’s names</button>
+          <p class="step-note">In Participants, below the card.</p>
+        </div>
+      </li>
+      <li id="step2">
+        <span class="step-mark" aria-hidden="true">2</span>
+        <div>
+          <button type="button" class="step-btn" id="stepCopy">Copy your team link</button>
+          <p class="step-note">It opens with your names.</p>
+        </div>
+      </li>
+      <li id="step3">
+        <span class="step-mark" aria-hidden="true">3</span>
+        <div>
+          <p class="step-text">Bookmark it or share it</p>
+          <p class="step-note">Use that link from now on.</p>
+        </div>
+      </li>
+    </ol>
+  </section>
 
   <main>
     <section class="deck" id="deck" aria-label="Current question">
@@ -530,6 +599,28 @@ What would your autobiography be called?
 What’s a movie you can quote almost word for word?
 What’s your signature dish, the one people actually ask you to make?
 What’s the most ambitious flat-pack furniture you’ve assembled, and did it survive?
+What’s a song you know every word to without ever trying to learn it?
+What’s your go-to order at a café or takeaway?
+What’s a board or card game you’re secretly great at?
+What’s the best thing you’ve ever won?
+What’s a small luxury you refuse to give up?
+What’s the most random thing in your bag right now?
+Describe your perfect breakfast.
+What’s a TV theme tune you can still hum?
+What’s your favorite word, in any language?
+Have you ever had a nickname? How did you get it?
+What’s the most useless object you still can’t throw away?
+What was your favorite game or toy as a kid?
+What hobby would you try if nobody could see you being bad at it?
+What’s a place near you that you love but most people overlook?
+What’s your favorite way to waste ten minutes?
+What snack would you take to a desert island?
+What’s the best Wi-Fi network name you’ve ever seen?
+What’s something you collect, or used to collect?
+If you owned a boat, what would you name it?
+What’s on your phone’s lock screen right now, and why?
+What’s your go-to dance move?
+Which celebrity would you swap lives with for a day?
 
 # Would you rather
 Would you rather be able to talk to animals or speak every human language fluently?
@@ -561,6 +652,28 @@ Would you rather have free Wi-Fi everywhere you go or free coffee everywhere you
 Would you rather be a famous musician or a famous chef?
 Would you rather only be able to whisper or only be able to shout?
 Would you rather be invisible for a day or able to fly for a day?
+Would you rather have a huge home library or a home cinema?
+Would you rather have perfect weather on every holiday or never wait in a queue again?
+Would you rather give up social media or streaming services for a year?
+Would you rather always have a full phone battery or always find a parking spot?
+Would you rather be an expert in one thing or pretty good at everything?
+Would you rather live in a big city or a small village?
+Would you rather eat only breakfast food or only dinner food for a year?
+Would you rather go on a road trip or a cruise?
+Would you rather never do laundry again or never wash dishes again?
+Would you rather have a photographic memory or learn any skill in a week?
+Would you rather always know the perfect thing to say or always know when to stay quiet?
+Would you rather be able to talk your way out of anything or into anywhere?
+Would you rather be able to breathe underwater or never feel cold?
+Would you rather have your own theme song play when you enter a room or a laugh track follow you everywhere?
+Would you rather be the best player on a losing team or the worst player on a winning team?
+Would you rather explore a new country alone or a familiar one with friends?
+Would you rather give every presentation as a song or as interpretive dance?
+Would you rather live without music or without movies?
+Would you rather have a talking pet or a pet that does your chores?
+Would you rather see the dinosaurs or watch the first moon landing live?
+Would you rather wear the same outfit every day or never wear the same outfit twice?
+Would you rather have a job you love with average pay or a so-so job with great pay?
 
 # Hot takes
 What’s a popular food you think is completely overrated?
@@ -589,6 +702,28 @@ What piece of technology was better in its older version?
 What’s a trend you hope never comes back?
 Is it acceptable to eat pizza with a knife and fork?
 What’s a “life hack” that doesn’t actually work?
+What’s an overrated productivity tip that people swear by?
+Open-plan offices: brilliant or terrible?
+Is it ever okay to send work emails at the weekend?
+Voice messages: useful or a crime against humanity?
+Which dip goes best with fries, and why are the others wrong?
+Books or their film adaptations: which usually wins?
+What’s the most overrated kitchen gadget?
+Socks with sandals: acceptable or not?
+What’s a “healthy” food you think tastes awful?
+Coffee or tea, and why is the other one wrong?
+Is it okay to heat up fish in the office microwave?
+What’s the right number of open browser tabs?
+Is clapping when a plane lands okay?
+Dark mode or light mode? Defend your choice.
+Which sport is the most boring to watch?
+Should “reply all” be banned?
+What’s a sequel that’s better than the original?
+Shoes on or off inside the house?
+Is the snooze button your friend or your enemy?
+What’s a common saying that makes no sense when you think about it?
+At the airport: arrive early or just in time?
+Is eating during a video call acceptable?
 
 # Stories
 What’s the best trip you’ve ever taken, and what made it great?
@@ -616,6 +751,27 @@ Tell us about a time a stranger was unexpectedly kind to you.
 What’s the best thing that happened to you this week?
 What’s the most trouble you got into as a kid?
 What’s the longest you’ve ever waited for something, and was it worth it?
+What’s the best day off you’ve ever had?
+What’s the funniest misunderstanding you’ve been part of?
+What’s the best meal you’ve ever had, and where was it?
+Tell us about a time you were completely out of your comfort zone.
+What’s a skill you taught yourself, and how did it go?
+Tell us about the most memorable neighbor you’ve ever had.
+Tell us about a time you were really lucky.
+Tell us about your first car, bike, or favorite way of getting around.
+What’s the most interesting place you’ve ever stayed?
+Tell us about a time you met someone famous, or almost did.
+What’s the strangest thing you’ve seen on public transport?
+Tell us about a time you had to improvise.
+Tell us about a time something broke at the worst possible moment.
+Have you ever performed on stage or competed in something? How did it go?
+Tell us about your most memorable birthday.
+What’s the best thing you’ve found by accident?
+Tell us about a time you said yes to something and were glad you did.
+Tell us about a pet you had, or always wanted.
+What’s the longest journey you’ve ever made?
+Tell us about a time technology let you down spectacularly.
+What’s the most unexpected friendship you’ve made?
 
 # A bit deeper
 What’s something you’ve changed your mind about in the last few years?
@@ -643,22 +799,28 @@ What’s a risk you took that paid off?
 Where in the world do you feel most at home?
 What’s something you’d like to be known for?
 What’s a value you try to live by, even when it’s inconvenient?
-
-# Team stuff
-What’s the best thing our team pulled off this year?
-Which project would you happily do all over again?
-What’s something this team does better than any team you’ve worked with?
-What’s a team tradition we should start?
-If our team had a mascot, what would it be?
-What would our team’s theme song be?
-What’s the best tip or shortcut you’ve picked up from someone here?
-What’s the funniest thing that’s happened on a call with this team?
-If we had a team offsite anywhere in the world, where should it be?
-What’s something you’d like to learn from someone on this team?
-What’s a small win from this week that deserves more credit?
-How should we celebrate when a big release goes live?
-Which emoji best describes our team this week?
-What’s something about your role that the rest of us might not know?
+What’s something you’re learning at the moment?
+How is your idea of a perfect weekend different from ten years ago?
+Who do you go to for advice, and why them?
+What’s a mistake that taught you something valuable?
+What’s something you hope will be different in your life five years from now?
+What’s a quality you really admire in other people?
+What’s the best way someone can support you on a tough day?
+What’s something you’re better at now than you were a year ago?
+What’s a decision you’re glad you didn’t overthink?
+What’s a topic you could talk about for hours?
+What’s a place that changed you?
+What does success mean to you these days?
+What’s one thing you’d like to do more of next year?
+Who’s someone you’d like to thank but haven’t yet?
+What’s something you appreciate more as you get older?
+What helps you focus when you really need to?
+What’s a lesson from a hobby that also helps you at work?
+When do you feel most like yourself?
+What gives you energy at work?
+What’s the best thing about the stage of life you’re in right now?
+When were you last really proud of someone else?
+What’s a question you wish people asked you more often?
 </script>
 
 <script>
@@ -801,6 +963,8 @@ What’s something about your role that the rest of us might not know?
       const q = bankById.get(id);
       if (!q || q.cat === moved[id] || removed.has(id) || typeof moved[id] !== 'string') delete moved[id];
     });
+    const usedCats = new Set(allQuestions().filter((q) => !removed.has(q.id)).map((q) => q.cat));
+    catOrder = catOrder.filter((c) => usedCats.has(c));
     const keptOrder = catOrder.filter((c) => bank.cats.includes(c));
     if (!custom.length && !removed.size && !Object.keys(moved).length &&
         keptOrder.length === catOrder.length && keptOrder.join('\n') === bank.cats.filter((c) => keptOrder.includes(c)).join('\n')) {
@@ -827,7 +991,7 @@ What’s something about your role that the rest of us might not know?
     const active = activeQuestions();
     const cats = [];
     const add = (c) => { if (c && !cats.includes(c)) cats.push(c); };
-    catOrder.forEach(add);
+    catOrder.forEach((c) => { if (active.some((q) => q.cat === c)) add(c); });
     bank.cats.forEach((c) => { if (active.some((q) => q.cat === c)) add(c); });
     active.forEach((q) => add(q.cat));
     if (!cats.length) DEFAULT_CATS.forEach(add);
@@ -846,7 +1010,7 @@ What’s something about your role that the rest of us might not know?
     const blocks = [];
     categories().forEach((cat) => {
       const qs = active.filter((q) => q.cat === cat);
-      if (!qs.length && !catOrder.includes(cat)) return;
+      if (!qs.length) return;
       blocks.push(['# ' + cat].concat(qs.map((q) => q.text)).join('\n'));
     });
     return blocks.join('\n\n') + '\n';
@@ -866,6 +1030,8 @@ What’s something about your role that the rest of us might not know?
     return out;
   }
   let participants = readParticipants();
+  // Setup steps appear only for someone without a team yet (no names in the link or in this browser).
+  const setup = { open: participants.length === 0, copied: false };
 
   function saveParticipants() {
     store.set('participants', participants);
@@ -1076,6 +1242,26 @@ What’s something about your role that the rest of us might not know?
     });
     $('pCount').textContent = participants.length ? String(participants.length) : '';
     $('pEmpty').hidden = participants.length > 0;
+    renderSetup();
+  }
+
+  function setStep(id, done, current, note) {
+    const li = $(id);
+    li.classList.toggle('done', done);
+    li.classList.toggle('current', current);
+    li.querySelector('.step-mark').textContent = done ? '✓' : id.slice(-1);
+    if (note) li.querySelector('.step-note').textContent = note;
+  }
+  function renderSetup() {
+    $('setup').hidden = !setup.open;
+    if (!setup.open) return;
+    const named = participants.length > 0;
+    setStep('step1', named, !named, named
+      ? (participants.length === 1 ? '1 name added.' : participants.length + ' names added.')
+      : 'In Participants, below the card.');
+    setStep('step2', setup.copied, named && !setup.copied, setup.copied ? 'Copied. It opens with your names.' : 'It opens with your names.');
+    setStep('step3', false, named && setup.copied, null);
+    $('stepCopy').disabled = !named;
   }
 
   function renderQuestions() {
@@ -1479,9 +1665,13 @@ What’s something about your role that the rest of us might not know?
       try { ok = document.execCommand('copy'); } catch (e2) { ok = false; }
       ta.remove();
     }
+    const finishingSetup = ok && setup.open;
     toast(ok
-      ? (presentLink ? 'Team link copied. It opens in presentation mode.' : 'Team link copied.')
+      ? (finishingSetup
+          ? 'Team link copied. Bookmark it or share it with your team, and use it from now on.'
+          : (presentLink ? 'Team link copied. It opens in presentation mode.' : 'Team link copied.'))
       : 'Couldn’t copy automatically. Copy the address from your browser’s address bar.');
+    if (finishingSetup) { setup.copied = true; setup.open = false; renderSetup(); }
   }
 
   let toastTimer = null;
@@ -1522,6 +1712,14 @@ What’s something about your role that the rest of us might not know?
   $('undoChanges').addEventListener('click', undoChanges);
   $('download').addEventListener('click', downloadPage);
   $('editText').addEventListener('click', openBulkEditor);
+  $('setupHide').innerHTML = ICON_X;
+  $('setupHide').addEventListener('click', () => { setup.open = false; renderSetup(); });
+  $('stepAdd').addEventListener('click', () => {
+    const input = $('personName');
+    input.scrollIntoView({ block: 'center', behavior: matchMedia('(prefers-reduced-motion: reduce)').matches ? 'auto' : 'smooth' });
+    input.focus({ preventScroll: true });
+  });
+  $('stepCopy').addEventListener('click', copyLink);
   $('bulkSave').addEventListener('click', saveBulk);
   $('bulkCancel').addEventListener('click', closeBulkEditor);
   document.addEventListener('keydown', (e) => {
